@@ -268,16 +268,21 @@ module Puma
       # things in shape before booting the app.
       @launcher.config.run_hooks :before_worker_boot, index
 
+      puts "before start server (#{Time.now})"
       server = start_server
+      puts "after start server, server is #{server.class} (#{Time.now})"
 
       Signal.trap "SIGTERM" do
         @worker_write << "e#{Process.pid}\n" rescue nil
         server.stop
       end
 
+      puts 'here'
+
       begin
         @worker_write << "b#{Process.pid}\n"
       rescue SystemCallError, IOError
+        puts 'there'
         Thread.current.purge_interrupt_queue if Thread.current.respond_to? :purge_interrupt_queue
         STDERR.puts "Master seems to have exited, exiting."
         return
