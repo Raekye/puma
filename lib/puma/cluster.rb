@@ -303,12 +303,15 @@ module Puma
         end
       end
 
+      puts "server is #{server.class} (#{Time.now})"
       server.run.join
+      puts "server joined (#{Time.now})"
 
       # Invoke any worker shutdown hooks so they can prevent the worker
       # exiting until any background operations are completed
       @launcher.config.run_hooks :before_worker_shutdown, index
     ensure
+      puts "sudoku-ing (#{Time.now})"
       @worker_write << "t#{Process.pid}\n" rescue nil
       @worker_write.close
     end
