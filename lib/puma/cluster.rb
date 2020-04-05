@@ -106,6 +106,8 @@ module Puma
       end
 
       def term
+        puts 'Calling term from:'
+        puts caller.join('\n')
         begin
           if @first_term_sent && (Time.now - @first_term_sent) > @options[:worker_shutdown_timeout]
             @signal = "KILL"
