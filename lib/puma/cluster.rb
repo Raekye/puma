@@ -237,6 +237,7 @@ module Puma
     end
 
     def worker(index, master)
+      puts "worker start: #{index}"
       title  = "puma: cluster worker #{index}: #{master}"
       title += " [#{@options[:tag]}]" if @options[:tag] && !@options[:tag].empty?
       $0 = title
@@ -247,12 +248,16 @@ module Puma
       @master_read.close
       @suicide_pipe.close
 
+      puts 'please'
+
       Thread.new do
         Puma.set_thread_name "worker check pipe"
         IO.select [@check_pipe]
         log "! Detected parent died, dying"
         exit! 1
       end
+
+      puts 'print something'
 
       # If we're not running under a Bundler context, then
       # report the info about the context we will be using
